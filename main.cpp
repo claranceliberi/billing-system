@@ -380,6 +380,9 @@ void Shopping :: receipt(){
     cout << "\n\n_________________________________________________________\n";
     cout << "\n\nTotal Ammount : \n\n";
 
+}
 
-
+int main(){
+    Shopping s;
+    s.menu();
 }
