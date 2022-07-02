@@ -5,6 +5,7 @@
 #include <map>
 #include <iterator>
 
+
 using namespace std;
 
 class CSV{
@@ -89,9 +90,9 @@ vector<string> CSV::selectById(int id){
 /**
  * @brief Update certain line in csv file by id
  * 
- * @param id 
- * @param data 
- * @return int 
+ * @param id id of the line , this is the first number that appears in csv
+ * @param data new data to replace old one as string
+ * @return int : number of updated rows
  */
 int CSV::updateById(int id, string data){
     // NOTE: i know this function has stupid logic that could never be done in large enterprise application
@@ -134,6 +135,26 @@ int CSV::updateById(int id, string data){
     return updatedRows;
 }
 
+
+/**
+ * @brief Update certain line in csv file by id
+ * 
+ * @param id id of the line , this is the first number that appears in csv
+ * @param data new data to replace old one as string
+ * @return int : number of updated rows
+ */
+int CSV::updateById(int id, vector<string> data){
+    string dataString = "";
+
+    for(auto & d:data){
+        if(dataString.length() > 0)
+            dataString +=",";
+        dataString +=d;
+    }
+
+    return this->updateById(id,dataString);
+}
+
 void displayVector(vector<string> _vect){
     copy(_vect.begin(), _vect.end(),ostream_iterator<string>(cout, " "));
 }
@@ -168,10 +189,12 @@ int main(){
 
 
     // TEST UPDATE FUNCTIONALITY
-    displayVector(csv.selectById(1));
+    // displayVector(csv.selectById(1));
     
-    cout << "\n\n" << csv.updateById(1,"1,ntwari,900") << "\n\n";
-    displayVector(csv.selectById(1));
+    // vector<string> data= {"1","umwali","11"};
 
-    return 0;
+    // cout << "\n\n" << csv.updateById(1,data) << "\n\n";
+    // // cout << "\n\n" << csv.updateById(1,"1,ntwari,900") << "\n\n"; // or using just string string;
+
+    // displayVector(csv.selectById(1));
 }
