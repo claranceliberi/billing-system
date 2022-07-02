@@ -219,11 +219,11 @@ int main(){
     CSV csv("data.csv");
 
     
-    // TEST SELECT ALL FUNCTIONALITY
+    // 1. TEST SELECT ALL FUNCTIONALITY
     // map<string, vector<string>> list = csv.selectAll();
     // displayMap(&list);
 
-    // TEST GET FUNCTIONALITY
+    //2.  TEST GET FUNCTIONALITY
     // try{
     //     displayVector(csv.selectById(20));
     // }catch(int e){
@@ -232,7 +232,7 @@ int main(){
     // }
 
 
-    // TEST UPDATE FUNCTIONALITY
+    //3. TEST UPDATE FUNCTIONALITY
     // displayVector(csv.selectById(1));
     
     // vector<string> data= {"1","umwali","11"};
@@ -242,5 +242,6 @@ int main(){
 
     // displayVector(csv.selectById(1));
 
+    //4. TEST DELETE
     csv.deleteById(2);
 }
