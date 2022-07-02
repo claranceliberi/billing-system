@@ -52,6 +52,37 @@ map<string, vector<string>> CSV::selectAll(){
 }
 
 
+/**
+ * @brief select specific record in file
+ * 
+ * @param id 
+ * @return vector<string> 
+ */
+vector<string> CSV::selectById(int id){
+    fstream file(this->filename);
+
+    vector<string> foundRow;
+    string line,word;
+    int foundId;
+
+    while(getline(file,line)){
+        foundRow.clear();
+        stringstream s(line);
+
+        while(getline(s,word,',')){
+            foundRow.push_back(word);
+        }
+
+        // assuming that every first element will be interger
+        foundId = stoi(foundRow[0]);
+
+        if( foundId == id)
+            return foundRow;
+    }
+
+    throw 404;
+}
+
 void displayVector(vector<string> _vect){
     copy(_vect.begin(), _vect.end(),ostream_iterator<string>(cout, " "));
 }
@@ -74,8 +105,14 @@ int main(){
     
     map<string, vector<string>> list = csv.selectAll();
 
-    displayMap(&list);
+    // displayMap(&list);
 
+    try{
+        displayVector(csv.selectById(20));
+    }catch(int e){
+        if(e == 404)
+        cout << "\nNot found\n" ; 
+    }
 
     return 0;
 }
