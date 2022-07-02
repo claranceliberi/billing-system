@@ -14,19 +14,23 @@ class CSV{
     public:
         CSV(const char *filename);
         map<string, vector<string>> selectAll();
+        vector<string> selectById(int id);
 };
 
 CSV :: CSV(const char *filename){
     this->filename = filename;
 }
-
+/**
+ * @brief select everything  from file
+ * 
+ * @return map<string, vector<string>> 
+ */
 map<string, vector<string>> CSV::selectAll(){
     fstream file(this->filename);
-    string line;
 
     map<string, vector<string>> dataSet;
     vector<string> row;
-    string word;
+    string word,line;
 
     while(getline(file,line)){
         row.clear();
@@ -41,12 +45,26 @@ map<string, vector<string>> CSV::selectAll(){
         cout << endl;
     }
 
+    //close file after reading
+    file.close();
+
     return dataSet;
 }
 
 
 void displayVector(vector<string> _vect){
     copy(_vect.begin(), _vect.end(),ostream_iterator<string>(cout, " "));
+}
+
+void displayMap(map<string,vector<string>>* list){
+    map<string,vector<string> >::iterator it;
+
+    for (it = list->begin(); it != list->end(); it++)
+    {
+        cout << it->first << "\t\t";
+        displayVector(it->second);
+        cout << endl;
+    }
 }
 
 int main(){
@@ -56,14 +74,7 @@ int main(){
     
     map<string, vector<string>> list = csv.selectAll();
 
-    map<string,vector<string> >::iterator it;
-
-    for (it = list.begin(); it != list.end(); it++)
-    {
-        cout << it->first << "\t\t";
-        displayVector(it->second);
-        cout << endl;
-    }
+    displayMap(&list);
 
 
     return 0;
