@@ -18,6 +18,7 @@ class CSV{
         vector<string> selectById(int id);
         int updateById(int id,string data);
         int updateById(int id,vector<string> data);
+        int deleteById(int id);
 };
 
 CSV :: CSV(const char *filename){
@@ -104,7 +105,6 @@ int CSV::updateById(int id, string data){
     fstream file(this->filename);
     ofstream temp;
     int updatedRows =0;
-    int linePosition = 0;
 
     string line,identity, tempFileName = "temp.csv";
 
@@ -122,7 +122,6 @@ int CSV::updateById(int id, string data){
         }
         temp << line << "\n";
 
-        linePosition = file.tellp();
 
     }
 
@@ -153,6 +152,51 @@ int CSV::updateById(int id, vector<string> data){
     }
 
     return this->updateById(id,dataString);
+}
+
+
+/**
+ * @brief delete specific line in file
+ * 
+ * @param id 
+ * @return int : return 0 if nothing deleted , otherwise 1
+ */
+int CSV::deleteById(int id){
+    // NOTE: i know this function has stupid logic that could never be done in large enterprise application
+    // rewriting whole file 😒, i understands how overwhelming it is  and how poor perfomant it is
+    // but you need to understand that i was rushing and this was fast for me, or if you have time open PR
+    // dealing with file pointers is kinda pain
+
+
+    fstream file(this->filename);
+    ofstream temp;
+    int deleted = 0;
+
+    string line,identity, tempFileName = "temp.csv";
+
+    temp.open(tempFileName);
+
+    while(getline(file,line)){
+
+        stringstream s(line);
+        
+        getline(s,identity,',');
+
+        if(id != stoi(identity)){
+            temp << line << "\n" ;
+            deleted = 1;
+        }
+
+
+    }
+
+    temp.close();
+    file.close();
+
+    remove(this->filename);
+    rename(const_cast<char*>(tempFileName.c_str()),this->filename);
+
+    return deleted;
 }
 
 void displayVector(vector<string> _vect){
@@ -197,4 +241,6 @@ int main(){
     // // cout << "\n\n" << csv.updateById(1,"1,ntwari,900") << "\n\n"; // or using just string string;
 
     // displayVector(csv.selectById(1));
+
+    csv.deleteById(2);
 }
