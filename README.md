@@ -1,5 +1,7 @@
 ## Billing system
-simple buggy billing system, which is not working properly. but there is working csv file handling operations
+Simple buggy billing system, which is not working properly. but there is working csv file handling operations.
+
+But the intentions was not about making billing system but working with csv file.
 
 ## Files and what they do
 
