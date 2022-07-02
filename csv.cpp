@@ -15,6 +15,8 @@ class CSV{
         CSV(const char *filename);
         map<string, vector<string>> selectAll();
         vector<string> selectById(int id);
+        int updateById(int id,string data);
+        int updateById(int id,vector<string> data);
 };
 
 CSV :: CSV(const char *filename){
@@ -80,7 +82,56 @@ vector<string> CSV::selectById(int id){
             return foundRow;
     }
 
+    file.close();
     throw 404;
+}
+
+/**
+ * @brief Update certain line in csv file by id
+ * 
+ * @param id 
+ * @param data 
+ * @return int 
+ */
+int CSV::updateById(int id, string data){
+    // NOTE: i know this function has stupid logic that could never be done in large enterprise application
+    // rewriting whole file 😒, i understands how overwhelming it is  and how poor perfomant it is
+    // but you need to understand that i was rushing and this was fast for me, or if you have time open PR
+    // dealing with file pointers is kinda pain
+
+
+    fstream file(this->filename);
+    ofstream temp;
+    int updatedRows =0;
+    int linePosition = 0;
+
+    string line,identity, tempFileName = "temp.csv";
+
+    temp.open(tempFileName);
+
+    while(getline(file,line)){
+
+        stringstream s(line);
+        
+        getline(s,identity,',');
+
+        if(id == stoi(identity)){
+            line.replace(line.find(line),line.length(),data);
+            updatedRows++;
+        }
+        temp << line << "\n";
+
+        linePosition = file.tellp();
+
+    }
+
+    temp.close();
+    file.close();
+
+    remove(this->filename);
+    rename(const_cast<char*>(tempFileName.c_str()),this->filename);
+
+    return updatedRows;
 }
 
 void displayVector(vector<string> _vect){
@@ -103,16 +154,24 @@ int main(){
     CSV csv("data.csv");
 
     
-    map<string, vector<string>> list = csv.selectAll();
-
+    // TEST SELECT ALL FUNCTIONALITY
+    // map<string, vector<string>> list = csv.selectAll();
     // displayMap(&list);
 
-    try{
-        displayVector(csv.selectById(20));
-    }catch(int e){
-        if(e == 404)
-        cout << "\nNot found\n" ; 
-    }
+    // TEST GET FUNCTIONALITY
+    // try{
+    //     displayVector(csv.selectById(20));
+    // }catch(int e){
+    //     if(e == 404)
+    //     cout << "\nNot found\n" ; 
+    // }
+
+
+    // TEST UPDATE FUNCTIONALITY
+    displayVector(csv.selectById(1));
+    
+    cout << "\n\n" << csv.updateById(1,"1,ntwari,900") << "\n\n";
+    displayVector(csv.selectById(1));
 
     return 0;
 }
