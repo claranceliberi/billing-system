@@ -17,10 +17,10 @@ class CSV{
         map<string, vector<string>> selectAll();
         vector<string> selectById(int id);
         int updateById(int id,string data);
-        int updateById(int id,vector<string> data);
+        int updateById(int id,vector<string>* data);
         int deleteById(int id);
         string add(string data);
-        vector<string> add(vector<string> data);
+        vector<string> add(vector<string>* data);
 };
 
 CSV :: CSV(const char *filename){
@@ -144,10 +144,10 @@ int CSV::updateById(int id, string data){
  * @param data new data to replace old one as string
  * @return int : number of updated rows
  */
-int CSV::updateById(int id, vector<string> data){
+int CSV::updateById(int id, vector<string> *data){
     string dataString = "";
 
-    for(auto & d:data){
+    for(auto & d : *data){
         if(dataString.length() > 0)
             dataString +=",";
         dataString +=d;
@@ -234,6 +234,25 @@ string CSV::add(string data){
     return newLine;
 }
 
+vector<string> CSV::add(vector<string>* data){
+    string dataString = "";
+
+    for(auto & d : *data){
+        if(dataString.length() > 0)
+            dataString +=",";
+        dataString += d;
+    }
+
+    string newData = this->add(dataString),singleCol;
+    vector<string> newDataVector;
+    stringstream newDataStream(newData);
+
+    while(getline(newDataStream,singleCol,',')){
+        newDataVector.push_back(singleCol);
+    }
+
+    return newDataVector;
+}
 
 
 void displayVector(vector<string> _vect){
@@ -283,5 +302,7 @@ int main(){
     // csv.deleteById(2);
 
     //5. ADD DATA TO FILE
-    cout << csv.add("tracy,303");
+    // cout << csv.add("tracy,303");
+    vector<string> data = {"tracy","430"};
+    displayVector(csv.add(&data));
 }
