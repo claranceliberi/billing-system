@@ -19,6 +19,8 @@ class CSV{
         int updateById(int id,string data);
         int updateById(int id,vector<string> data);
         int deleteById(int id);
+        string add(string data);
+        vector<string> add(vector<string> data);
 };
 
 CSV :: CSV(const char *filename){
@@ -179,7 +181,7 @@ int CSV::deleteById(int id){
     while(getline(file,line)){
 
         stringstream s(line);
-        
+
         getline(s,identity,',');
 
         if(id != stoi(identity)){
@@ -198,6 +200,41 @@ int CSV::deleteById(int id){
 
     return deleted;
 }
+
+
+string CSV::add(string data){
+    fstream file(this->filename);
+    map<int,int> ids;
+    string line,id,newLine;
+    int intId;
+
+    while(getline(file,line)){
+        stringstream lineStream(line);
+
+        getline(lineStream,id,',');
+        ids.insert({stoi(id), stoi(id)});
+    }
+
+    intId= stoi(id)+1;
+
+    //know wheter id exist in database
+    while(ids.find(intId) != ids.end()){
+        intId++;
+    }
+
+    file.close();
+
+    ofstream fileAppend(this->filename,ios::app);
+
+    newLine = to_string(intId) + "," + data;
+    fileAppend << newLine << endl;
+
+    fileAppend.close();
+
+    return newLine;
+}
+
+
 
 void displayVector(vector<string> _vect){
     copy(_vect.begin(), _vect.end(),ostream_iterator<string>(cout, " "));
@@ -243,5 +280,8 @@ int main(){
     // displayVector(csv.selectById(1));
 
     //4. TEST DELETE
-    csv.deleteById(2);
+    // csv.deleteById(2);
+
+    //5. ADD DATA TO FILE
+    cout << csv.add("tracy,303");
 }
